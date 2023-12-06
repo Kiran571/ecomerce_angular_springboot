@@ -5,6 +5,7 @@ import com.ecomerce.angular.jwt.dao.UserDao;
 import com.ecomerce.angular.jwt.entity.Role;
 import com.ecomerce.angular.jwt.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -18,7 +19,11 @@ public class UserService {
 
     @Autowired
     private RoleDao roleDao;
-    public User registerNewUser(User user){
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public User registerNewUser(User user) {
         return userDao.save(user);
     }
 
@@ -27,7 +32,7 @@ public class UserService {
     2. then this method will be run, here logic of roles and users will be writen
     */
 
-    public void initRolesAndUser(){
+    public void initRolesAndUser() {
         Role adminRole = new Role();
         adminRole.setRoleName("Admin");
         adminRole.setRoleDescription("Admin role");
@@ -44,7 +49,7 @@ public class UserService {
         adminUser.setUserFirstName("admin");
         adminUser.setUserLastName("admin");
         adminUser.setUserName("admin123");
-        adminUser.setUserPassword("admin@pass");
+        adminUser.setUserPassword(getEncodedPassword("admin@pass"));
         adminUser.setRole(adminRoles);
 
         adminRoles.add(adminRole);
@@ -56,14 +61,17 @@ public class UserService {
         user.setUserFirstName("Kiran");
         user.setUserLastName("Suryawanshi");
         user.setUserName("kiran123");
-        user.setUserPassword("kiran@pass");
+        user.setUserPassword(getEncodedPassword("kiran@pass"));
         user.setRole(userRoles);
 
         userRoles.add(userRole);
         userDao.save(user);
 
 
+    }
 
+    public String getEncodedPassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
 

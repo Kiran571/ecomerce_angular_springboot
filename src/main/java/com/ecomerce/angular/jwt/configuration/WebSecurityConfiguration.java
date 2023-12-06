@@ -3,6 +3,7 @@ package com.ecomerce.angular.jwt.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 //take care of role based authorization like admin , users. endpoints will exposed to authorize person only
 public class WebSecurityConfiguration {
 
@@ -30,8 +31,10 @@ public class WebSecurityConfiguration {
     private JwtRequestFilter jwtRequestFilter;
 
     //JwtService is the child of UserDetailsService
+    @Lazy
     @Autowired
     private UserDetailsService jwtService;
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -43,7 +46,7 @@ public class WebSecurityConfiguration {
 //
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("").permitAll()
+                        .requestMatchers("/authenticate").permitAll()
                         .requestMatchers(HttpHeaders.ALLOW).permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exp -> exp.authenticationEntryPoint(jwtAuthenicationEntryPoint))
