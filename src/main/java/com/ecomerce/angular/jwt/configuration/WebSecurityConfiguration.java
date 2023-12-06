@@ -46,7 +46,7 @@ public class WebSecurityConfiguration {
 //
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/authenticate").permitAll()
+                        .requestMatchers("/authenticate", "/registerNewUser").permitAll()
                         .requestMatchers(HttpHeaders.ALLOW).permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exp -> exp.authenticationEntryPoint(jwtAuthenicationEntryPoint))

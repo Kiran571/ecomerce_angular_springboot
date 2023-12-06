@@ -24,6 +24,13 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User registerNewUser(User user) {
+
+        Role role = roleDao.findById("user").get();
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setRole(roles);
+
+        user.setUserPassword(getEncodedPassword(user.getUserPassword()));
         return userDao.save(user);
     }
 
@@ -56,16 +63,16 @@ public class UserService {
         userDao.save(adminUser);
 
         //User Role setting
-        Set<Role> userRoles = new HashSet<>();
-        User user = new User();
-        user.setUserFirstName("Kiran");
-        user.setUserLastName("Suryawanshi");
-        user.setUserName("kiran123");
-        user.setUserPassword(getEncodedPassword("kiran@pass"));
-        user.setRole(userRoles);
-
-        userRoles.add(userRole);
-        userDao.save(user);
+//        Set<Role> userRoles = new HashSet<>();
+//        User user = new User();
+//        user.setUserFirstName("Kiran");
+//        user.setUserLastName("Suryawanshi");
+//        user.setUserName("kiran123");
+//        user.setUserPassword(getEncodedPassword("kiran@pass"));
+//        user.setRole(userRoles);
+//
+//        userRoles.add(userRole);
+//        userDao.save(user);
 
 
     }
